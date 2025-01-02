@@ -1,5 +1,4 @@
 import json_stream
-import gzip
 import json
 
 # read sources/fr-en-indicateurs-valeur-ajoutee-colleges.json
@@ -82,5 +81,5 @@ for uai in etablissements:
             'properties': etablissement
         })
 
-with gzip.open('docs/etablissements.geojson.gz', 'wt', encoding='utf-8') as f:
-    json.dump(geojson, f, ensure_ascii=False, indent=2)
+with open('docs/etablissements.json', 'wt', encoding='utf-8') as f:
+    json.dump(geojson, f, ensure_ascii=False, indent=0)
