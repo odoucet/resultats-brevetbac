@@ -42,7 +42,7 @@
     }).addTo(map);
 
     // 3. Charger le fichier GeoJSON compressé
-    fetch('etablissements.geojson.gz')
+    fetch('etablissements.json.gz')
       .then(response => {
         if (!response.ok) {
           throw new Error('Erreur lors du chargement du fichier GeoJSON');
