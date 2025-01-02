@@ -1,7 +1,12 @@
 Carte des collèges et lycées français avec scores de réussite Brevet / BAC
 ======================================
 
-Sources : 
+Version interactive : https://odoucet.github.io/cartescolaire/
+
+
+
+Sources de données
+-----------------
 - Colleges :  https://data.education.gouv.fr/explore/dataset/fr-en-indicateurs-valeur-ajoutee-colleges/export/?disjunctive.uai&disjunctive.nom_de_l_etablissement&disjunctive.commune&disjunctive.departement&disjunctive.academie
 ```
 # Sample

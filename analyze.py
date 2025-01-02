@@ -1,4 +1,6 @@
 import json_stream
+import gzip
+import json
 
 # read sources/fr-en-indicateurs-valeur-ajoutee-colleges.json
 # lazy loading to use less memory
@@ -47,7 +49,6 @@ with open('sources/fr-en-indicateurs-de-resultat-des-lycees-gt_v2.json') as f:
 
         etablissements[converted['uai']][converted['annee']] = converted
 
-testdump = False
 print('Merging with annuaire ...')
 with open('sources/fr-en-annuaire-education.json') as f:
     data = json_stream.load(f)
@@ -57,9 +58,6 @@ with open('sources/fr-en-annuaire-education.json') as f:
         # merge
         if converted['identifiant_de_l_etablissement'] in etablissements:
             etablissements[converted['identifiant_de_l_etablissement']].update(converted)
-            if not testdump:
-                print(converted)
-                testdump = True
             continue
         else:
             #print('Missing UAI: ' + converted['identifiant_de_l_etablissement'])
@@ -68,14 +66,21 @@ with open('sources/fr-en-annuaire-education.json') as f:
 
 print("Final size: " + str(len(etablissements)))
 
-# write csv file with tab separator
-with open('etablissements.csv', 'w') as f:
-    for key, value in etablissements.items():
+# prepare geojson data
+geojson = []
 
-        f.write(key)
-        f.write('\t')
-        # value is a dict
-        for k, v in value.items():
-            f.write(str(v))
-            f.write('\t')
-        f.write('\n')
+for uai in etablissements:
+    etablissement = etablissements[uai]
+
+    if 'latitude' in etablissement and 'longitude' in etablissement:
+        geojson.append({
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [etablissement['longitude'], etablissement['latitude']]
+            },
+            'properties': etablissement
+        })
+
+with gzip.open('docs/etablissements.geojson.gz', 'wt', encoding='utf-8') as f:
+    json.dump(geojson, f, ensure_ascii=False, indent=2)

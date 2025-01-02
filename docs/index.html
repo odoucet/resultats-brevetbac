@@ -1,1 +1,69 @@
-Hello World!
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Carte des établissements</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Feuille de style Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  />
+
+  <style>
+    /* Dimensions de la carte */
+    #map {
+      width: 100%;
+      height: 90vh; /* la carte prend 90% de la hauteur de la fenêtre */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Carte des établissements</h1>
+  <div id="map"></div>
+
+  <!-- Script Leaflet -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin="">
+  </script>
+
+  <script>
+    // 1. Initialisation de la carte
+    const map = L.map('map').setView([46.5, 2.5], 6); // coordonnées centrées sur la France
+
+    // 2. Ajouter une couche de tuiles (ici OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // 3. Charger le fichier GeoJSON compressé
+    fetch('etablissements.geojson.gz')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement du fichier GeoJSON');
+        }
+        return response.json(); 
+      })
+      .then(data => {
+        // 4. Afficher les données GeoJSON sur la carte
+        L.geoJSON(data, {
+          onEachFeature: function(feature, layer) {
+            // Exemple : au clic sur un point, on peut afficher un popup
+            if (feature.properties && feature.properties.nom) {
+              layer.bindPopup(feature.properties.nom);
+            }
+          }
+        }).addTo(map);
+      })
+      .catch(error => {
+        console.error('Une erreur est survenue :', error);
+      });
+  </script>
+
+</body>
+</html>
