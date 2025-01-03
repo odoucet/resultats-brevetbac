@@ -125,7 +125,7 @@ for uai in etablissements:
                 break
 
         if couleur is not None:
-            etablissement['marker-color'] = couleur
+            etablissement['color'] = couleur
 
         geojson.append({
             'type': 'Feature',

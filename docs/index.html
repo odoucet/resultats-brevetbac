@@ -74,7 +74,7 @@
             }
           },
           pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {fillColor: feature.properties.marker-color, color: feature.properties.marker-color, radius: 8, weight: 1, opacity: 1, fillOpacity: 0.8});
+            return L.circleMarker(latlng, {fillColor: feature.properties.color, color: feature.properties.color, radius: 8, weight: 1, opacity: 1, fillOpacity: 0.8});
           }
         }).addTo(map);
       })
