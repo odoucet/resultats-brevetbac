@@ -4,6 +4,14 @@ Carte des collèges et lycées français avec scores de réussite Brevet / BAC
 Version interactive : https://odoucet.github.io/cartescolaire/
 
 
+Installation locale
+-------------------
+- Téléchargez les trois fichiers ci-dessous au format JSON et mettez les dans le répertoire `sources` sans changer leur nom.
+- Installez les dépendances python : `pip install -r requirements.txt`
+- Lancez `analyze.py` : cela va regénérer le fichier docs/etablissements.json
+
+Pour un usage local, vous devrez lancer un mini serveur web car sinon la page docs/index.html refuse de charger le JSON.
+
 
 Sources de données
 -----------------
