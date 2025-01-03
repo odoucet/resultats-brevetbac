@@ -10,7 +10,11 @@ Installation locale
 - Installez les dépendances python : `pip install -r requirements.txt`
 - Lancez `analyze.py` : cela va regénérer le fichier docs/etablissements.json
 
-Pour un usage local, vous devrez lancer un mini serveur web car sinon la page docs/index.html refuse de charger le JSON.
+Pour un usage local, vous devrez lancer un mini serveur web car sinon la page docs/index.html refuse de charger le JSON : 
+```
+python -m http.server 8000 --directory docs
+# go to http://localhost:8000
+```
 
 
 Sources de données

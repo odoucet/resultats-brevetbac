@@ -12,7 +12,7 @@ etablissements = {}
 annee_courante = datetime.now().year
 
 
-def float_to_color(value, min_value=90, max_value=100):
+def float_to_color(value, min_value=80, max_value=100):
     """
     Convertit un float en une couleur entre rouge sombre et vert clair.
 
@@ -28,7 +28,7 @@ def float_to_color(value, min_value=90, max_value=100):
     ratio = (value - min_value) / (max_value - min_value)
 
     # Interpolation des couleurs (rouge sombre -> vert clair)
-    red = int((1 - ratio) * 139)  # Rouge sombre (139, 0, 0)
+    red = int((1 - ratio) * 50)  # Rouge sombre (50, 0, 0)
     green = int(ratio * 255)      # Vert clair (0, 255, 0)
     blue = 0                      # Pas de composante bleue
 
@@ -55,10 +55,17 @@ with open('sources/fr-en-indicateurs-valeur-ajoutee-colleges.json') as f:
         # remove null values
         converted = {k: v for k, v in converted.items() if v is not None}
 
-        if converted['uai'] not in etablissements:
-            etablissements[converted['uai']] = {}
+        uai = converted['uai']
+        session = converted['session']
 
-        etablissements[converted['uai']][converted['session']] = converted
+        # remove some values
+        for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'session', 'commune']:
+            converted.pop(key, None)
+
+        if uai not in etablissements:
+            etablissements[uai] = {}
+
+        etablissements[uai][session] = converted
 
 print('Loading lycée data ...')
 with open('sources/fr-en-indicateurs-de-resultat-des-lycees-gt_v2.json') as f:
@@ -74,11 +81,17 @@ with open('sources/fr-en-indicateurs-de-resultat-des-lycees-gt_v2.json') as f:
         # remove null values
         converted = {k: v for k, v in converted.items() if v is not None}
 
+        uai = converted['uai']
+        annee = converted['annee']
 
-        if converted['uai'] not in etablissements:
-            etablissements[converted['uai']] = {}
+        # remove some values
+        for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'annee', 'commune']:
+            converted.pop(key, None)
 
-        etablissements[converted['uai']][converted['annee']] = converted
+        if uai not in etablissements:
+            etablissements[uai] = {}
+
+        etablissements[uai][annee] = converted
 
 print('Merging with annuaire ...')
 with open('sources/fr-en-annuaire-education.json') as f:
@@ -109,7 +122,12 @@ for uai in etablissements:
     if 'latitude' in etablissement and 'longitude' in etablissement:
 
         # cleanup object before saving
-        etablissement.pop('position', None)
+        for key in ['position', 'code_commune', 'code_departement', 'code_academie', 'code_region', 'telephone', 'fax', 'mail', 
+                    'fiche_onisep', 'siren_siret', 'libelle_departement', 'coordx_origine','coordy_origine','date_ouverture', 'date_maj_ligne', 'precision_localisation', 'code_bassin_formation', 'libelle_bassin_formation', 'pial']:
+            etablissement.pop(key, None)
+        
+        # remove fields with value=0
+        etablissement = {k: v for k, v in etablissement.items() if v != "0" and v != 0}
 
         # Calcul de la couleur. taux_de_reussite_g pour les colleges ; taux_reu_total pour les lycees.
         couleur = None
@@ -126,12 +144,17 @@ for uai in etablissements:
 
         if couleur is not None:
             etablissement['color'] = couleur
+        
+        longitude = etablissement['longitude']
+        latitude = etablissement['latitude']
+        etablissement.pop('longitude')
+        etablissement.pop('latitude')
 
         geojson.append({
             'type': 'Feature',
             'geometry': {
                 'type': 'Point',
-                'coordinates': [etablissement['longitude'], etablissement['latitude']]
+                'coordinates': [longitude, latitude]
             },
             'properties': etablissement
         })
