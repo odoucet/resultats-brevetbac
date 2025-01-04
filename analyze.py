@@ -62,6 +62,9 @@ with open('sources/fr-en-indicateurs-valeur-ajoutee-colleges.json') as f:
         for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'session', 'commune', 'nom_circonscription', 'code_circonscription']:
             converted.pop(key, None)
 
+        # remove keys starting with va_ (valeur ajoutée)
+        converted = {k: v for k, v in converted.items() if not k.startswith('va_')}
+
         if uai not in etablissements:
             etablissements[uai] = {}
 
@@ -86,8 +89,11 @@ with open('sources/fr-en-indicateurs-de-resultat-des-lycees-gt_v2.json') as f:
 
         # remove some values
         for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'annee', 'commune', 'libelle_uai', 'code_commune', 'libelle_commune', 'code_departement', 'libelle_departement', 'libelle_academie',
-                    'code_region', 'libelle_region' ]:
+                    'code_region', 'libelle_region', 'num_ligne' ]:
             converted.pop(key, None)
+        
+        # remove keys starting with va_ (valeur ajoutée)
+        converted = {k: v for k, v in converted.items() if not k.startswith('va_')}
 
         if uai not in etablissements:
             etablissements[uai] = {}
@@ -123,8 +129,9 @@ for uai in etablissements:
     if 'latitude' in etablissement and 'longitude' in etablissement:
 
         # cleanup object before saving
-        for key in ['position', 'code_commune', 'code_departement', 'code_academie', 'code_region', 'telephone', 'fax', 'mail', 
-                    'fiche_onisep', 'siren_siret', 'libelle_departement', 'coordx_origine','coordy_origine','date_ouverture', 'date_maj_ligne', 'precision_localisation', 'code_bassin_formation', 'libelle_bassin_formation', 'pial']:
+        for key in ['position', 'code_commune', 'code_departement', 'code_academie', 'code_region', 'telephone', 'fax', 'mail', 'voie_generale',
+                    'fiche_onisep', 'siren_siret', 'libelle_departement', 'coordx_origine','coordy_origine','date_ouverture', 'date_maj_ligne', 'precision_localisation', 'code_bassin_formation', 'libelle_bassin_formation', 'pial',
+                    'libelle_academie', 'libelle_region', 'epsg_origine', 'ministere_tutelle', 'code_nature', 'libelle_nature', 'code_type_contrat_prive', 'code_zone_animation_pedagogique', 'libelle_zone_animation_pedagogique']:
             etablissement.pop(key, None)
         
         # remove fields with value=0

@@ -19,10 +19,15 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
+    h1 {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
     /* Dimensions de la carte */
     #map {
       width: 100%;
-      height: 90vh; /* la carte prend 90% de la hauteur de la fenêtre */
+      height: 92vh; /* la carte prend 90% de la hauteur de la fenêtre */
     }
     /* Overlay de chargement */
     #loadingOverlay {
@@ -40,22 +45,6 @@
 
     #loadingOverlay h1 {
       margin-bottom: 20px;
-    }
-
-    /* Barre de progression */
-    #progressBarContainer {
-      width: 300px;
-      height: 20px;
-      background: #ccc;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-    #progressBar {
-      height: 20px;
-      width: 0%;
-      background: #4caf50;
-      transition: width 0.1s;
     }
 
     /* barre d'échelle */
@@ -80,10 +69,6 @@
   <!-- Overlay de chargement -->
   <div id="loadingOverlay">
     <h1>Chargement des données…</h1>
-    <div id="progressBarContainer">
-      <div id="progressBar"></div>
-    </div>
-    <div id="progressText">0%</div>
   </div>
   <div class="scale-container" style="float: right; padding: 0px;">
     <span class="label">80%</span>
@@ -91,10 +76,10 @@
     <span class="label">100%</span>
   </div>
   <div style="float: right; font-size: 10px; padding: 0px;">
-    <div style="background-color: #ff0000; color: #ffffff; padding: 5px; margin-bottom: 5px;">Privé</div>
-    <div style="background-color: #0000ff; color: #ffffff; padding: 5px; margin-bottom: 5px;">Public</div>
+    <div style="border: 1px solid #ff0000; padding: 5px; margin-bottom: 5px;">Privé</div>
+    <div style="border: 1px solid #0000ff; padding: 5px; margin-bottom: 5px;">Public</div>
   </div>
-  <h1>Collèges et Lycées français avec scores de réussite Brevet / BAC</h1>
+  <h1>Scores de réussite Brevet / BAC</h1>
   <div id="map"></div>
 
   <!-- Script Leaflet -->
@@ -111,39 +96,90 @@
 
     // Mapping key => vrai nom
     const keyMapping = {
-      'nb_candidats_g': 'Candidats au BAC/Brevet Général',
-      'nb_candidats_p': 'Candidats au BAC/Brevet Professionnel',
-      'nb_candidats_s': 'Candidats au BAC/Brevet Scientifique',
-      'nb_candidats_t': 'Candidats au BAC/Brevet Technologique',
-      'taux_de_reussite_g': 'Taux de réussite au BAC/Brevet Général',
-      'taux_de_reussite_p': 'Taux de réussite au BAC/Brevet Professionnel',
-      'taux_de_reussite_s': 'Taux de réussite au BAC/Brevet Scientifique',
-      'taux_de_reussite_t': 'Taux de réussite au BAC/Brevet Technologique',
-      'va_du_taux_de_reussite_g': 'Variation du taux de réussite au BAC/Brevet Général',
-      'va_du_taux_de_reussite_p': 'Variation du taux de réussite au BAC/Brevet Professionnel',
-      'va_du_taux_de_reussite_s': 'Variation du taux de réussite au BAC/Brevet Scientifique',
-      'va_du_taux_de_reussite_t': 'Variation du taux de réussite au BAC/Brevet Technologique',
-      'taux_de_reussite_p': 'Taux de réussite au BAC/Brevet Professionnel',
-      'taux_de_reussite_g': 'Taux de réussite au BAC/Brevet Général',
-      'taux_de_reussite_s': 'Taux de réussite au BAC/Brevet Scientifique',
-      'taux_de_reussite_t': 'Taux de réussite au BAC/Brevet Technologique',
-      'note_a_l_ecrit_g': 'Note à l\'écrit au BAC/Brevet Général',
-      'note_a_l_ecrit_p': 'Note à l\'écrit au BAC/Brevet Professionnel',
-      'note_a_l_ecrit_s': 'Note à l\'écrit au BAC/Brevet Scientifique',
-      'note_a_l_ecrit_t': 'Note à l\'écrit au BAC/Brevet Technologique',
-      'va_de_la_note_g': 'Variation de la note à l\'écrit au BAC/Brevet Général',
-      'va_de_la_note_p': 'Variation de la note à l\'écrit au BAC/Brevet Professionnel',
-      'va_de_la_note_s': 'Variation de la note à l\'écrit au BAC/Brevet Scientifique',
-      'va_de_la_note_t': 'Variation de la note à l\'écrit au BAC/Brevet Technologique',
-      'taux_d_acces_6eme_3eme': 'Taux d\'accès de la 6ème à la 3ème',
-      'part_presents_3eme_ordinaire_total': 'Part des élèves présents en 3ème ordinaire',
-      'part_presents_3eme_ordinaire_g': 'Part des élèves présents en 3ème ordinaire Générale',
-      'part_presents_3eme_ordinaire_p': 'Part des élèves présents en 3ème ordinaire Professionnelle',
-      'part_presents_3eme_ordinaire_s': 'Part des élèves présents en 3ème ordinaire Scientifique',
-      'nb_mentions_ab_g': 'Nombre de mentions AB au BAC/Brevet Général',
-      'nb_mentions_b_g': 'Nombre de mentions B au BAC/Brevet Général',
-      'nb_mentions_tb_g': 'Nombre de mentions TB au BAC/Brevet Général',
-      'nb_mentions_global_g': 'Nombre de mentions globales au BAC/Brevet Général',
+      'nb_candidats_g': 'Candidats BAC/Brevet Général',
+      'nb_candidats_p': 'Candidats BAC/Brevet Professionnel',
+      'nb_candidats_s': 'Candidats BAC/Brevet Scientifique',
+      'nb_candidats_t': 'Candidats BAC/Brevet Technologique',
+      'taux_de_reussite_g': 'Tx de réussite BAC/Brevet Général',
+      'taux_de_reussite_p': 'Tx de réussite BAC/Brevet Professionnel',
+      'taux_de_reussite_s': 'Tx de réussite BAC/Brevet Scientifique',
+      'taux_de_reussite_t': 'Tx de réussite BAC/Brevet Technologique',
+      // 'va_du_taux_de_reussite_g': 'Δ tx de réussite BAC/Brevet Général',
+      // 'va_du_taux_de_reussite_p': 'Δ tx de réussite BAC/Brevet Professionnel',
+      // 'va_du_taux_de_reussite_s': 'Δ tx de réussite BAC/Brevet Scientifique',
+      // 'va_du_taux_de_reussite_t': 'Δ tx de réussite BAC/Brevet Technologique',
+      'taux_de_reussite_p': 'Tx de réussite BAC/Brevet Professionnel',
+      'taux_de_reussite_g': 'Tx de réussite BAC/Brevet Général',
+      'taux_de_reussite_s': 'Tx de réussite BAC/Brevet Scientifique',
+      'taux_de_reussite_t': 'Tx de réussite BAC/Brevet Technologique',
+      'note_a_l_ecrit_g': 'Note à l\'écrit BAC/Brevet Général',
+      'note_a_l_ecrit_p': 'Note à l\'écrit BAC/Brevet Professionnel',
+      'note_a_l_ecrit_s': 'Note à l\'écrit BAC/Brevet Scientifique',
+      'note_a_l_ecrit_t': 'Note à l\'écrit BAC/Brevet Technologique',
+      // 'va_de_la_note_g': 'Δ note à l\'écrit BAC/Brevet Général',
+      // 'va_de_la_note_p': 'Δ note à l\'écrit BAC/Brevet Professionnel',
+      // 'va_de_la_note_s': 'Δ note à l\'écrit BAC/Brevet Scientifique',
+      // 'va_de_la_note_t': 'Δ note à l\'écrit BAC/Brevet Technologique',
+      'taux_d_acces_6eme_3eme': 'Tx d\'accès de la 6ème à la 3ème',
+      'part_presents_3eme_ordinaire_total': 'Elèves présents en 3ème ordinaire',
+      'part_presents_3eme_ordinaire_g': 'Elèves présents en 3ème ordinaire Générale',
+      'part_presents_3eme_ordinaire_p': 'Elèves présents en 3ème ordinaire Professionnelle',
+      'part_presents_3eme_ordinaire_s': 'Elèves présents en 3ème ordinaire Scientifique',
+      'nb_mentions_ab_g': 'Mentions AB BAC/Brevet Général',
+      'nb_mentions_b_g': 'Mentions B BAC/Brevet Général',
+      'nb_mentions_tb_g': 'Mentions TB BAC/Brevet Général',
+      'nb_mentions_global_g': 'Mentions globales BAC/Brevet Général',
+      'nb_mentions_tb_avecf_g': 'Mentions TB avec félicitations BAC/Brevet Général',
+      'nb_mentions_tb_sansf_g': 'Mentions TB sans félicitations BAC/Brevet Général',
+      'presents_total': 'Elèves présents',
+      'taux_reu_total': 'Tx de réussite total',
+      // 'va_reu_total': 'Δ tx de réussite total',
+      'taux_acces_2nde': 'Tx d\'accès en 2nde',
+      // 'va_acces_2nde': 'Δ tx d\'accès en 2nde',
+      'taux_men_total': 'Tx de mentions total',
+      // 'va_men_total': 'Δ tx de mentions total',
+      'presents_gnle': 'Elèves présents Générale',
+      'taux_reu_gnle': 'Tx de réussite Générale',
+      // 'va_reu_gnle': 'Δ tx de réussite Générale',
+      'eff_2nde': 'Effectif 2nde',
+      'eff_1ere': 'Effectif 1ère',
+      'eff_term': 'Effectif Terminale',
+      'taux_acces_1ere': 'Tx d\'accès en 1ère',
+      'taux_acces_term': 'Tx d\'accès en Terminale',
+      // 'va_acces_1ere': 'Δ tx d\'accès en 1ère',
+      // 'va_acces_term': 'Δ tx d\'accès en Terminale',
+      // 'va_men_gnle': 'Δ tx de mentions Générale',
+      'taux_men_gnle': 'Tx de mentions Générale',
+      'nb_mentions_tb_avecf_gnle': 'Mentions TB avec félicitations Générale',
+      'nb_mentions_tb_sansf_gnle': 'Mentions TB sans félicitations Générale',
+      'presents_l': 'Elèves présents filière L',
+      'presents_s': 'Elèves présents filière S',
+      'presents_es': 'Elèves présents filière ES',
+      'taux_reu_l': 'Tx de réussite filière L',
+      'taux_reu_s': 'Tx de réussite filière S',
+      'taux_reu_es': 'Tx de réussite filière ES',
+      // 'va_reu_l': 'Δ tx de réussite filière L',
+      // 'va_reu_s': 'Δ tx de réussite filière S',
+      // 'va_reu_es': 'Δ tx de réussite filière ES',
+      'taux_men_l': 'Tx de mentions filière L',
+      'taux_men_s': 'Tx de mentions filière S',
+      'taux_men_es': 'Tx de mentions filière ES',
+      // 'va_men_l': 'Δ tx de mentions filière L',
+      // 'va_men_s': 'Δ tx de mentions filière S',
+      // 'va_men_es': 'Δ tx de mentions filière ES',
+      
+
+      'identifiant_de_l_etablissement': 'Identifiant',
+      'nom_etablissement': 'Nom',
+      'type_etablissement': 'Type',
+      'statut_public_prive': 'Statut',
+      'adresse': 'Adresse',
+      'code_postal': 'Code postal',
+      'nom_commune': 'Commune',
+      'nombre_d_eleves': 'Nombre d\'éleves',
+      'type_contrat_prive': 'Type de contrat privé',
+      'etat': 'Etat',
+
     };
 
 
@@ -155,7 +191,7 @@
     }).addTo(map);
 
     // 3. Charger le fichier GeoJSON
-    fetch('etablissements.json')
+    fetch('etablissements.json?_cache=' + Date.now())
       .then(response => {
         if (!response.ok) {
           throw new Error('Erreur lors du chargement du fichier GeoJSON');
@@ -163,27 +199,15 @@
         return response.json(); 
       })
       .then(data => {
-        // Nombre d'elements dans data : 
-        const nbElements = data.length;
-        let nbElementsLoaded = 0;
-
         // 4. Afficher les données GeoJSON sur la carte
         L.geoJSON(data, {
           onEachFeature: function(feature, layer) {
-            // Mise à jour de la barre de progression
-            nbElementsLoaded++;
-
-            const progress = Math.round(nbElementsLoaded / nbElements * 100);
-
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = progress + '%';
-
-            // Exemple : au clic sur un point, on peut afficher un popup
+            // Exemple : clic sur un point, on peut afficher un popup
             if (feature.properties) {
               if (!feature.properties) return;
 
               // -- 1) Identifions les clés 'année' et les autres --
-              // Ici on utilise une expression régulière pour détecter des années au format 4 chiffres (19xx, 20xx, etc.)
+              // Ici on utilise une expression régulière pour détecter des années format 4 chiffres (19xx, 20xx, etc.)
               const yearRegex = /^[12]\d{3}$/;
               const yearKeys = [];
               const otherKeys = [];
@@ -199,7 +223,7 @@
               // order yearKeys by year DESC
               yearKeys.sort((a, b) => parseInt(b) - parseInt(a));
 
-              // -- 2) Construire le 1er tableau (colonnes = années, lignes = clés communes par année) --
+              // -- 2) Construire le 1er table(colonnes = années, lignes = clés communes par année) --
               let yearTable = '';
               if (yearKeys.length > 0) {
                 // Découvrons toutes les sous-clés communes dans les objets "année"
@@ -211,8 +235,8 @@
                   }
                 });
 
-                // Construisons le tableau HTML : une colonne pour la "propriété", puis une colonne par année
-                yearTable += '<table border="1" cellspacing="0" cellpadding="4" style="margin-bottom:10px;">';
+                // Construisons le tableHTML : une colonne pour la "propriété", puis une colonne par année
+                yearTable += '<table border="1" cellspacing="0" cellpadding="1" style="margin-bottom:10px;">';
                 yearTable += '  <thead>';
                 yearTable += '    <tr>';
                 yearTable += '      <th>Propriété</th>';
@@ -247,10 +271,10 @@
               }
 
 
-              // -- 3) Construire le 2e tableau pour les clés non "années" --
+              // -- 3) Construire le 2e tablepour les clés non "années" --
               let otherKeysTable = '';
               if (otherKeys.length > 0) {
-                otherKeysTable += '<table border="1" cellspacing="0" cellpadding="4">';
+                otherKeysTable += '<table border="1" cellspacing="0" cellpadding="1">';
                 otherKeysTable += '  <tbody>';
                 otherKeys.forEach(oKey => {
                   if (oKey === 'color') return; // on ne veut pas afficher la couleur
@@ -272,7 +296,7 @@
 
               // -- 4) Fusionner les deux tableaux en un seul contenu HTML --
               const popupHtml = `
-                <div style="max-height:300px; overflow:auto; padding:5px;">
+                <div style="max-height:80vh; max-width: 100%; overflow:auto; padding:1px;">
                   <h2>${feature.properties.nom_etablissement}</h2>
                   <h3>R&eacute;sultats par ann&eacute;e</h3>
                   ${yearTable}
