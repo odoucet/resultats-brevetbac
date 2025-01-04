@@ -48,7 +48,7 @@ with open('sources/fr-en-indicateurs-valeur-ajoutee-colleges.json') as f:
             continue
 
         if converted['uai'] in etablissements and converted['session'] in etablissements[converted['uai']]:
-            print('Duplicate UAI: ' + converted['uai'])
+            print('ATTENTION: Code etablissement UAI en double: ' + converted['uai'])
             print(converted)
             continue
         
@@ -129,7 +129,7 @@ for uai in etablissements:
     if 'latitude' in etablissement and 'longitude' in etablissement:
 
         # cleanup object before saving
-        for key in ['position', 'code_commune', 'code_departement', 'code_academie', 'code_region', 'telephone', 'fax', 'mail', 'voie_generale',
+        for key in ['position', 'code_commune', 'code_departement', 'code_academie', 'code_region', 'telephone', 'fax', 'mail', 'voie_generale', 'nom_circonscription', 'code_circonscription',
                     'fiche_onisep', 'siren_siret', 'libelle_departement', 'coordx_origine','coordy_origine','date_ouverture', 'date_maj_ligne', 'precision_localisation', 'code_bassin_formation', 'libelle_bassin_formation', 'pial',
                     'libelle_academie', 'libelle_region', 'epsg_origine', 'ministere_tutelle', 'code_nature', 'libelle_nature', 'code_type_contrat_prive', 'code_zone_animation_pedagogique', 'libelle_zone_animation_pedagogique']:
             etablissement.pop(key, None)
@@ -170,4 +170,4 @@ for uai in etablissements:
         })
 
 with open('docs/etablissements.json', 'wt', encoding='utf-8') as f:
-    json.dump(geojson, f, ensure_ascii=False, indent=0)
+    json.dump(geojson, f, ensure_ascii=False, separators=(',', ':'), sort_keys=True)

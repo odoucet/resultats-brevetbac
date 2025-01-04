@@ -63,6 +63,25 @@
       /* Dégradé de #320000 (50,0,0) vers #00FF00 (0,255,0) */
       background: linear-gradient(to right, rgb(50, 0, 0), rgb(0, 255, 0));
     }
+
+    /* Tables */
+    .mytable {
+      border-collapse: collapse; /* fusion des bordures */
+      width: 100%;               /* largeur de la table = 100% du conteneur */
+      margin: 1em 0;             /* marge externe */
+      font-family: sans-serif;   /* police d'écriture */
+    }
+
+    .mytable th,
+    .mytable td {
+      border: 1px solid #ccc;    /* bordure grise claire */
+      padding: 2px 2px;         /* espacements internes */
+    }
+
+    .mytable th {
+      background-color: #f9f9f9; /* couleur de fond pour l'en-tête */
+      font-weight: bold;         /* texte en gras */
+    }
   </style>
 </head>
 <body>
@@ -129,8 +148,8 @@
       'nb_mentions_b_g': 'Mentions B BAC/Brevet Général',
       'nb_mentions_tb_g': 'Mentions TB BAC/Brevet Général',
       'nb_mentions_global_g': 'Mentions globales BAC/Brevet Général',
-      'nb_mentions_tb_avecf_g': 'Mentions TB avec félicitations BAC/Brevet Général',
-      'nb_mentions_tb_sansf_g': 'Mentions TB sans félicitations BAC/Brevet Général',
+      'nb_mentions_tb_avecf_g': 'Mentions TB avec félicitations (Général)',
+      'nb_mentions_tb_sansf_g': 'Mentions TB sans félicitations (Général)',
       'presents_total': 'Elèves présents',
       'taux_reu_total': 'Tx de réussite total',
       // 'va_reu_total': 'Δ tx de réussite total',
@@ -173,7 +192,7 @@
       'nom_etablissement': 'Nom',
       'type_etablissement': 'Type',
       'statut_public_prive': 'Statut',
-      'adresse': 'Adresse',
+      'adresse_1': 'Adresse',
       'code_postal': 'Code postal',
       'nom_commune': 'Commune',
       'nombre_d_eleves': 'Nombre d\'éleves',
@@ -236,7 +255,7 @@
                 });
 
                 // Construisons le tableHTML : une colonne pour la "propriété", puis une colonne par année
-                yearTable += '<table border="1" cellspacing="0" cellpadding="1" style="margin-bottom:10px;">';
+                yearTable += '<table class="mytable" cellspacing="0" cellpadding="1" style="margin-bottom:10px;">';
                 yearTable += '  <thead>';
                 yearTable += '    <tr>';
                 yearTable += '      <th>Propriété</th>';
@@ -254,7 +273,7 @@
                   const mappedKey = keyMapping[subKey] || subKey;
 
                   yearTable += '    <tr>';
-                  yearTable += `      <td><strong>${mappedKey}</strong></td>`;
+                  yearTable += `      <td style="font-weight: bold; background-color: #f9f9f9;">${mappedKey}</td>`;
                   yearKeys.forEach(year => {
                     const yearObj = feature.properties[year];
                     let val = '';
@@ -274,18 +293,22 @@
               // -- 3) Construire le 2e tablepour les clés non "années" --
               let otherKeysTable = '';
               if (otherKeys.length > 0) {
-                otherKeysTable += '<table border="1" cellspacing="0" cellpadding="1">';
+                otherKeysTable += '<table class="mytable" cellspacing="0" cellpadding="1">';
                 otherKeysTable += '  <tbody>';
                 otherKeys.forEach(oKey => {
                   if (oKey === 'color') return; // on ne veut pas afficher la couleur
-                  const val = feature.properties[oKey];
+                  let val = feature.properties[oKey];
 
                   // Si la clé est dans le mapping, on utilise le vrai nom
                   const mappedKey = keyMapping[oKey] || oKey;
 
+                  if (oKey == 'web') {
+                    val = `<a href="${val}" target="_blank">${val}</a>`;
+                  }
+
                   otherKeysTable += `
                     <tr>
-                      <td><strong>${mappedKey}</strong></td>
+                      <td style="font-weight: bold; background-color: #f9f9f9;">${mappedKey}</td>
                       <td>${val}</td>
                     </tr>
                   `;
