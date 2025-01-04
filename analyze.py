@@ -58,6 +58,10 @@ with open('sources/fr-en-indicateurs-valeur-ajoutee-colleges.json') as f:
         uai = converted['uai']
         session = converted['session']
 
+        # si annee < now()-6, on ignore
+        if int(session) < annee_courante - 6:
+            continue
+
         # remove some values
         for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'session', 'commune', 'nom_circonscription', 'code_circonscription']:
             converted.pop(key, None)
@@ -86,6 +90,11 @@ with open('sources/fr-en-indicateurs-de-resultat-des-lycees-gt_v2.json') as f:
 
         uai = converted['uai']
         annee = converted['annee']
+
+        # si annee < now()-6, on ignore
+        if int(annee) < annee_courante - 6:
+            continue
+
 
         # remove some values
         for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'annee', 'commune', 'libelle_uai', 'code_commune', 'libelle_commune', 'code_departement', 'libelle_departement', 'libelle_academie',
