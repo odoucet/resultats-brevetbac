@@ -59,7 +59,7 @@ with open('sources/fr-en-indicateurs-valeur-ajoutee-colleges.json') as f:
         session = converted['session']
 
         # remove some values
-        for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'session', 'commune']:
+        for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'session', 'commune', 'nom_circonscription', 'code_circonscription']:
             converted.pop(key, None)
 
         if uai not in etablissements:
@@ -85,7 +85,8 @@ with open('sources/fr-en-indicateurs-de-resultat-des-lycees-gt_v2.json') as f:
         annee = converted['annee']
 
         # remove some values
-        for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'annee', 'commune']:
+        for key in ['nom_de_l_etablissement','academie','departement','secteur', 'uai', 'annee', 'commune', 'libelle_uai', 'code_commune', 'libelle_commune', 'code_departement', 'libelle_departement', 'libelle_academie',
+                    'code_region', 'libelle_region' ]:
             converted.pop(key, None)
 
         if uai not in etablissements:
@@ -131,7 +132,7 @@ for uai in etablissements:
 
         # Calcul de la couleur. taux_de_reussite_g pour les colleges ; taux_reu_total pour les lycees.
         couleur = None
-        for year in range(annee_courante, annee_courante - 6, -1):
+        for year in range(annee_courante, annee_courante - 10, -1):
             year = str(year)
             if year in etablissement and 'taux_de_reussite_g' in etablissement[year]:
                 # compute "color", from dark red to bright green, with value between 90 and 100
@@ -144,6 +145,8 @@ for uai in etablissements:
 
         if couleur is not None:
             etablissement['color'] = couleur
+        else:
+            etablissement['color'] = '#000000'
         
         longitude = etablissement['longitude']
         latitude = etablissement['latitude']

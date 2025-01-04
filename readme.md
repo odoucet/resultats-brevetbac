@@ -1,7 +1,7 @@
 Carte des collèges et lycées français avec scores de réussite Brevet / BAC
 ======================================
 
-Version interactive : https://odoucet.github.io/cartescolaire/
+Version interactive : https://odoucet.github.io/resultats-brevetbac/
 
 
 Installation locale

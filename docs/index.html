@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Carte des établissements</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <!-- Feuille de style Leaflet -->
   <link
@@ -13,16 +13,88 @@
   />
 
   <style>
+    body {
+      padding: 0;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
     /* Dimensions de la carte */
     #map {
       width: 100%;
       height: 90vh; /* la carte prend 90% de la hauteur de la fenêtre */
     }
+    /* Overlay de chargement */
+    #loadingOverlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 9999; /* devant la carte */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    #loadingOverlay h1 {
+      margin-bottom: 20px;
+    }
+
+    /* Barre de progression */
+    #progressBarContainer {
+      width: 300px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    #progressBar {
+      height: 20px;
+      width: 0%;
+      background: #4caf50;
+      transition: width 0.1s;
+    }
+
+    /* barre d'échelle */
+    .scale-container {
+      display: inline-flex;      /* place les éléments sur la même ligne */
+      align-items: center;       /* centre verticalement */
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+    }
+    .scale-container .label {
+      margin: 0 5px;            /* espace horizontal entre le label et la barre */
+    }
+    .scale-bar {
+      width: 100px;
+      height: 10px;
+      /* Dégradé de #320000 (50,0,0) vers #00FF00 (0,255,0) */
+      background: linear-gradient(to right, rgb(50, 0, 0), rgb(0, 255, 0));
+    }
   </style>
 </head>
 <body>
-
-  <h1>Carte des Collègues et Lycées français avec scores de réussite Brevet / BAC</h1>
+  <!-- Overlay de chargement -->
+  <div id="loadingOverlay">
+    <h1>Chargement des données…</h1>
+    <div id="progressBarContainer">
+      <div id="progressBar"></div>
+    </div>
+    <div id="progressText">0%</div>
+  </div>
+  <div class="scale-container" style="float: right; padding: 0px;">
+    <span class="label">80%</span>
+    <div class="scale-bar"></div>
+    <span class="label">100%</span>
+  </div>
+  <div style="float: right; font-size: 10px; padding: 0px;">
+    <div style="background-color: #ff0000; color: #ffffff; padding: 5px; margin-bottom: 5px;">Privé</div>
+    <div style="background-color: #0000ff; color: #ffffff; padding: 5px; margin-bottom: 5px;">Public</div>
+  </div>
+  <h1>Collèges et Lycées français avec scores de réussite Brevet / BAC</h1>
   <div id="map"></div>
 
   <!-- Script Leaflet -->
@@ -35,6 +107,46 @@
     // 1. Initialisation de la carte
     //const map = L.map('map').setView([46.5, 2.5], 6); // coordonnées centrées sur la France
     const map = L.map('map').setView([48.8566, 2.3522], 13); // coordonnées centrées sur Paris
+
+
+    // Mapping key => vrai nom
+    const keyMapping = {
+      'nb_candidats_g': 'Candidats au BAC/Brevet Général',
+      'nb_candidats_p': 'Candidats au BAC/Brevet Professionnel',
+      'nb_candidats_s': 'Candidats au BAC/Brevet Scientifique',
+      'nb_candidats_t': 'Candidats au BAC/Brevet Technologique',
+      'taux_de_reussite_g': 'Taux de réussite au BAC/Brevet Général',
+      'taux_de_reussite_p': 'Taux de réussite au BAC/Brevet Professionnel',
+      'taux_de_reussite_s': 'Taux de réussite au BAC/Brevet Scientifique',
+      'taux_de_reussite_t': 'Taux de réussite au BAC/Brevet Technologique',
+      'va_du_taux_de_reussite_g': 'Variation du taux de réussite au BAC/Brevet Général',
+      'va_du_taux_de_reussite_p': 'Variation du taux de réussite au BAC/Brevet Professionnel',
+      'va_du_taux_de_reussite_s': 'Variation du taux de réussite au BAC/Brevet Scientifique',
+      'va_du_taux_de_reussite_t': 'Variation du taux de réussite au BAC/Brevet Technologique',
+      'taux_de_reussite_p': 'Taux de réussite au BAC/Brevet Professionnel',
+      'taux_de_reussite_g': 'Taux de réussite au BAC/Brevet Général',
+      'taux_de_reussite_s': 'Taux de réussite au BAC/Brevet Scientifique',
+      'taux_de_reussite_t': 'Taux de réussite au BAC/Brevet Technologique',
+      'note_a_l_ecrit_g': 'Note à l\'écrit au BAC/Brevet Général',
+      'note_a_l_ecrit_p': 'Note à l\'écrit au BAC/Brevet Professionnel',
+      'note_a_l_ecrit_s': 'Note à l\'écrit au BAC/Brevet Scientifique',
+      'note_a_l_ecrit_t': 'Note à l\'écrit au BAC/Brevet Technologique',
+      'va_de_la_note_g': 'Variation de la note à l\'écrit au BAC/Brevet Général',
+      'va_de_la_note_p': 'Variation de la note à l\'écrit au BAC/Brevet Professionnel',
+      'va_de_la_note_s': 'Variation de la note à l\'écrit au BAC/Brevet Scientifique',
+      'va_de_la_note_t': 'Variation de la note à l\'écrit au BAC/Brevet Technologique',
+      'taux_d_acces_6eme_3eme': 'Taux d\'accès de la 6ème à la 3ème',
+      'part_presents_3eme_ordinaire_total': 'Part des élèves présents en 3ème ordinaire',
+      'part_presents_3eme_ordinaire_g': 'Part des élèves présents en 3ème ordinaire Générale',
+      'part_presents_3eme_ordinaire_p': 'Part des élèves présents en 3ème ordinaire Professionnelle',
+      'part_presents_3eme_ordinaire_s': 'Part des élèves présents en 3ème ordinaire Scientifique',
+      'nb_mentions_ab_g': 'Nombre de mentions AB au BAC/Brevet Général',
+      'nb_mentions_b_g': 'Nombre de mentions B au BAC/Brevet Général',
+      'nb_mentions_tb_g': 'Nombre de mentions TB au BAC/Brevet Général',
+      'nb_mentions_global_g': 'Nombre de mentions globales au BAC/Brevet Général',
+    };
+
+
 
     // 2. Ajouter une couche de tuiles (ici OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -51,9 +163,21 @@
         return response.json(); 
       })
       .then(data => {
+        // Nombre d'elements dans data : 
+        const nbElements = data.length;
+        let nbElementsLoaded = 0;
+
         // 4. Afficher les données GeoJSON sur la carte
         L.geoJSON(data, {
           onEachFeature: function(feature, layer) {
+            // Mise à jour de la barre de progression
+            nbElementsLoaded++;
+
+            const progress = Math.round(nbElementsLoaded / nbElements * 100);
+
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
+
             // Exemple : au clic sur un point, on peut afficher un popup
             if (feature.properties) {
               if (!feature.properties) return;
@@ -71,6 +195,9 @@
                   otherKeys.push(key);
                 }
               }
+
+              // order yearKeys by year DESC
+              yearKeys.sort((a, b) => parseInt(b) - parseInt(a));
 
               // -- 2) Construire le 1er tableau (colonnes = années, lignes = clés communes par année) --
               let yearTable = '';
@@ -98,8 +225,12 @@
 
                 // Pour chaque sous-clé, on affiche une ligne
                 subKeys.forEach(subKey => {
+
+                  // Si la clé est dans le mapping, on utilise le vrai nom
+                  const mappedKey = keyMapping[subKey] || subKey;
+
                   yearTable += '    <tr>';
-                  yearTable += `      <td><strong>${subKey}</strong></td>`;
+                  yearTable += `      <td><strong>${mappedKey}</strong></td>`;
                   yearKeys.forEach(year => {
                     const yearObj = feature.properties[year];
                     let val = '';
@@ -124,9 +255,13 @@
                 otherKeys.forEach(oKey => {
                   if (oKey === 'color') return; // on ne veut pas afficher la couleur
                   const val = feature.properties[oKey];
+
+                  // Si la clé est dans le mapping, on utilise le vrai nom
+                  const mappedKey = keyMapping[oKey] || oKey;
+
                   otherKeysTable += `
                     <tr>
-                      <td><strong>${oKey}</strong></td>
+                      <td><strong>${mappedKey}</strong></td>
                       <td>${val}</td>
                     </tr>
                   `;
@@ -151,12 +286,26 @@
             }
           },
           pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {fillColor: feature.properties.color, color: feature.properties.color, radius: 8, weight: 1, opacity: 1, fillOpacity: 0.8});
+            if (!feature.properties) return;
+
+            if (!feature.properties.statut_public_prive) {
+              color = feature.properties.color;
+            } else if (feature.properties.statut_public_prive === 'Public') {
+              color = 'blue';
+            } else {
+              color = 'red';
+            }
+            return L.circleMarker(latlng, {fillColor: feature.properties.color, color: color, radius: 16, weight: 1, opacity: 1, fillOpacity: 0.8});
           }
         }).addTo(map);
       })
+      .then(r => {
+        // Cacher l'overlay de chargement
+        document.getElementById('loadingOverlay').style.display = 'none';
+      })
       .catch(error => {
         console.error('Une erreur est survenue :', error);
+        document.getElementById('loadingOverlay').innerHTML = '<h2>Erreur de chargement</h2>';
       });
   </script>
 
