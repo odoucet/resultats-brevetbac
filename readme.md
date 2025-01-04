@@ -16,6 +16,9 @@ python -m http.server 8000 --directory docs
 # go to http://localhost:8000
 ```
 
+Bugs connus
+-----------
+- Si un lycée et un collège ont les mêmes coordonnées GPS, le point Lycée passe dessus et le collège n'est pas cliquable.
 
 Sources de données
 -----------------

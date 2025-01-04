@@ -25,7 +25,7 @@
     }
 
     h1 {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
     }
 
@@ -119,41 +119,47 @@
 
     // Mapping key => vrai nom
     const keyMapping = {
-      'nb_candidats_g': 'Candidats BAC/Brevet Général',
-      'nb_candidats_p': 'Candidats BAC/Brevet Professionnel',
-      'nb_candidats_s': 'Candidats BAC/Brevet Scientifique',
-      'nb_candidats_t': 'Candidats BAC/Brevet Technologique',
-      'taux_de_reussite_g': 'Tx de réussite BAC/Brevet Général',
-      'taux_de_reussite_p': 'Tx de réussite BAC/Brevet Professionnel',
-      'taux_de_reussite_s': 'Tx de réussite BAC/Brevet Scientifique',
-      'taux_de_reussite_t': 'Tx de réussite BAC/Brevet Technologique',
-      // 'va_du_taux_de_reussite_g': 'Δ tx de réussite BAC/Brevet Général',
-      // 'va_du_taux_de_reussite_p': 'Δ tx de réussite BAC/Brevet Professionnel',
-      // 'va_du_taux_de_reussite_s': 'Δ tx de réussite BAC/Brevet Scientifique',
-      // 'va_du_taux_de_reussite_t': 'Δ tx de réussite BAC/Brevet Technologique',
-      'taux_de_reussite_p': 'Tx de réussite BAC/Brevet Professionnel',
-      'taux_de_reussite_g': 'Tx de réussite BAC/Brevet Général',
-      'taux_de_reussite_s': 'Tx de réussite BAC/Brevet Scientifique',
-      'taux_de_reussite_t': 'Tx de réussite BAC/Brevet Technologique',
-      'note_a_l_ecrit_g': 'Note à l\'écrit BAC/Brevet Général',
-      'note_a_l_ecrit_p': 'Note à l\'écrit BAC/Brevet Professionnel',
-      'note_a_l_ecrit_s': 'Note à l\'écrit BAC/Brevet Scientifique',
-      'note_a_l_ecrit_t': 'Note à l\'écrit BAC/Brevet Technologique',
-      // 'va_de_la_note_g': 'Δ note à l\'écrit BAC/Brevet Général',
-      // 'va_de_la_note_p': 'Δ note à l\'écrit BAC/Brevet Professionnel',
-      // 'va_de_la_note_s': 'Δ note à l\'écrit BAC/Brevet Scientifique',
-      // 'va_de_la_note_t': 'Δ note à l\'écrit BAC/Brevet Technologique',
+      'nb_candidats_g': 'Candidats (Général)',
+      'nb_candidats_p': 'Candidats (Professionnel)',
+      'nb_candidats_s': 'Candidats (Scientifique)',
+      'nb_candidats_t': 'Candidats (Technologique)',
+      'taux_de_reussite_g': 'Tx de réussite (Général)',
+      'taux_de_reussite_p': 'Tx de réussite (Professionnel)',
+      'taux_de_reussite_s': 'Tx de réussite (Scientifique)',
+      'taux_de_reussite_t': 'Tx de réussite (Technologique)',
+      // 'va_du_taux_de_reussite_g': 'Δ tx de réussite (Général)',
+      // 'va_du_taux_de_reussite_p': 'Δ tx de réussite (Professionnel)',
+      // 'va_du_taux_de_reussite_s': 'Δ tx de réussite (Scientifique)',
+      // 'va_du_taux_de_reussite_t': 'Δ tx de réussite (Technologique)',
+      'taux_de_reussite_p': 'Tx de réussite (Professionnel)',
+      'taux_de_reussite_g': 'Tx de réussite (Général)',
+      'taux_de_reussite_s': 'Tx de réussite (Scientifique)',
+      'taux_de_reussite_t': 'Tx de réussite (Technologique)',
+      'note_a_l_ecrit_g': 'Note à l\'écrit (Général)',
+      'note_a_l_ecrit_p': 'Note à l\'écrit (Professionnel)',
+      'note_a_l_ecrit_s': 'Note à l\'écrit (Scientifique)',
+      'note_a_l_ecrit_t': 'Note à l\'écrit (Technologique)',
+      // 'va_de_la_note_g': 'Δ note à l\'écrit (Général)',
+      // 'va_de_la_note_p': 'Δ note à l\'écrit (Professionnel)',
+      // 'va_de_la_note_s': 'Δ note à l\'écrit (Scientifique)',
+      // 'va_de_la_note_t': 'Δ note à l\'écrit (Technologique)',
       'taux_d_acces_6eme_3eme': 'Tx d\'accès de la 6ème à la 3ème',
-      'part_presents_3eme_ordinaire_total': 'Elèves présents en 3ème ordinaire',
-      'part_presents_3eme_ordinaire_g': 'Elèves présents en 3ème ordinaire Générale',
-      'part_presents_3eme_ordinaire_p': 'Elèves présents en 3ème ordinaire Professionnelle',
-      'part_presents_3eme_ordinaire_s': 'Elèves présents en 3ème ordinaire Scientifique',
-      'nb_mentions_ab_g': 'Mentions AB BAC/Brevet Général',
-      'nb_mentions_b_g': 'Mentions B BAC/Brevet Général',
-      'nb_mentions_tb_g': 'Mentions TB BAC/Brevet Général',
-      'nb_mentions_global_g': 'Mentions globales BAC/Brevet Général',
+      'part_presents_3eme_ordinaire_total': 'Elèves présents en 3ème',
+      'part_presents_3eme_ordinaire_g': 'Elèves présents en 3ème Générale',
+      'part_presents_3eme_ordinaire_p': 'Elèves présents en 3ème Professionnelle',
+      'part_presents_3eme_ordinaire_s': 'Elèves présents en 3ème Scientifique',
+      'nb_mentions_ab_g': 'Mentions AB (Général)',
+      'nb_mentions_b_g': 'Mentions B (Général)',
+      'nb_mentions_tb_g': 'Mentions TB (Général)',
+      'nb_mentions_global_g': 'Mentions globales (Général)',
       'nb_mentions_tb_avecf_g': 'Mentions TB avec félicitations (Général)',
       'nb_mentions_tb_sansf_g': 'Mentions TB sans félicitations (Général)',
+      'nb_mentions_ab_t': 'Mentions AB (Technologique)',
+      'nb_mentions_b_t': 'Mentions B (Technologique)',
+      'nb_mentions_tb_t': 'Mentions TB (Technologique)',
+      'nb_mentions_global_t': 'Mentions globales (Technologique)',
+      'nb_mentions_tb_avecf_t': 'Mentions TB avec félicitations (Technologique)',
+      'nb_mentions_tb_sansf_t': 'Mentions TB sans félicitations (Technologique)',
       'presents_total': 'Elèves présents',
       'taux_reu_total': 'Tx de réussite total',
       // 'va_reu_total': 'Δ tx de réussite total',
@@ -163,6 +169,7 @@
       // 'va_men_total': 'Δ tx de mentions total',
       'presents_gnle': 'Elèves présents Générale',
       'taux_reu_gnle': 'Tx de réussite Générale',
+      'presents_stmg': 'Elèves présents STMG',
       // 'va_reu_gnle': 'Δ tx de réussite Générale',
       'eff_2nde': 'Effectif 2nde',
       'eff_1ere': 'Effectif 1ère',
@@ -173,8 +180,8 @@
       // 'va_acces_term': 'Δ tx d\'accès en Terminale',
       // 'va_men_gnle': 'Δ tx de mentions Générale',
       'taux_men_gnle': 'Tx de mentions Générale',
-      'nb_mentions_tb_avecf_gnle': 'Mentions TB avec félicitations Générale',
-      'nb_mentions_tb_sansf_gnle': 'Mentions TB sans félicitations Générale',
+      'nb_mentions_tb_avecf_gnle': 'Mentions TB avec félicitations (Général)',
+      'nb_mentions_tb_sansf_gnle': 'Mentions TB sans félicitations (Général)',
       'presents_l': 'Elèves présents filière L',
       'presents_s': 'Elèves présents filière S',
       'presents_es': 'Elèves présents filière ES',
@@ -187,6 +194,8 @@
       'taux_men_l': 'Tx de mentions filière L',
       'taux_men_s': 'Tx de mentions filière S',
       'taux_men_es': 'Tx de mentions filière ES',
+      'taux_men_stmg': 'Tx de mentions filière STMG',
+      'taux_reu_stmg': 'Tx de réussite filière STMG',
       // 'va_men_l': 'Δ tx de mentions filière L',
       // 'va_men_s': 'Δ tx de mentions filière S',
       // 'va_men_es': 'Δ tx de mentions filière ES',
@@ -323,7 +332,7 @@
 
               // -- 4) Fusionner les deux tableaux en un seul contenu HTML --
               const popupHtml = `
-                <div style="max-height:80vh; max-width: 100%; overflow:auto; padding:1px;">
+                <div style="max-height:70vh; max-width: 100%; overflow:auto; padding:1px;">
                   <h2>${feature.properties.nom_etablissement}</h2>
                   <h3>R&eacute;sultats par ann&eacute;e</h3>
                   ${yearTable}
@@ -333,7 +342,7 @@
                 </div>
               `;
 
-              layer.bindPopup(popupHtml, { maxWidth: 800 });
+              layer.bindPopup(popupHtml, { maxWidth: 'auto' });
             }
           },
           pointToLayer: function (feature, latlng) {
@@ -346,7 +355,13 @@
             } else {
               color = 'red';
             }
-            return L.circleMarker(latlng, {fillColor: feature.properties.color, color: color, radius: 16, weight: 1, opacity: 1, fillOpacity: 0.8});
+
+            if (feature.properties.type_etablissement === 'Collège') {
+              return L.circleMarker(latlng, {fillColor: feature.properties.color, color: color, weight: 3, opacity: 1, fillOpacity: 0.8});
+            } else {
+              return L.circleMarker(latlng, {fillColor: feature.properties.color, color: color, radius: 16, weight: 1, opacity: 1, fillOpacity: 0.8});
+            }
+            
           }
         }).addTo(map);
       })
